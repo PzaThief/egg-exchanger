@@ -1,5 +1,4 @@
 import React from "react";
-import logo from "./logo.svg";
 import "./App.css";
 
 function App() {
@@ -17,7 +16,8 @@ function App() {
           </a>
         </div>
       </div>
-      <div className="exchanger-cover">기준화폐</div>
+      <div className="exchanger-cover"></div>
+      <div className="cat-is-watching-you"></div>
     </div>
   );
 }
