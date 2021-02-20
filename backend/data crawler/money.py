@@ -16,10 +16,6 @@ my_key = secrets["koreaexim_key"]
 today = datetime.date.today()
 today += datetime.timedelta(min(-today.weekday() + 4, 0))
 
-base_url = "https://www.koreaexim.go.kr/site/program/financial/exchangeJSON?"
-params = {"data": "AP01", "authkey": my_key, "searchdate": today.strftime("%Y%m%d")}
-response = requests.post(base_url, verify=False, data=params)
-
 try:
     conn = mariadb.connect(
         host="127.0.0.1",
@@ -30,15 +26,20 @@ try:
     )
 except mariadb.Error as e:
     print(f"Error connecting to MariaDB Platform: {e}")
-
 cur = conn.cursor()
-placeholder = ", ".join(["%s"] * len(response.json()[0]))
-stmt = "insert into `{table}` ({columns}) values ({values});".format(
-    table="money_exchange_from_koreaexim", columns=",".join(response.json()[0].keys()), values=placeholder
-)
-cur.execute("TRUNCATE TABLE " + "money_exchange_from_koreaexim")
-for i in response.json():
-    cur.execute(stmt, tuple(i.values()))
-conn.commit()
+cur.execute("select update_time from money_exchange_from_koreaexim")
+if (datetime.datetime.now() - cur.fetchone()[0]).seconds / 3600 > 1:
+    base_url = "https://www.koreaexim.go.kr/site/program/financial/exchangeJSON?"
+    params = {"data": "AP01", "authkey": my_key, "searchdate": today.strftime("%Y%m%d")}
+    response = requests.post(base_url, verify=False, data=params)
+
+    placeholder = ", ".join(["%s"] * len(response.json()[0]))
+    stmt = "insert into `{table}` ({columns}) values ({values});".format(
+        table="money_exchange_from_koreaexim", columns=",".join(response.json()[0].keys()), values=placeholder
+    )
+    cur.execute("TRUNCATE TABLE " + "money_exchange_from_koreaexim")
+    for i in response.json():
+        cur.execute(stmt, tuple(i.values()))
+    conn.commit()
 cur.close()
 conn.close()
