@@ -13,8 +13,13 @@ with open(secret_file) as f:
     secrets = json.loads(f.read())
 my_key = secrets["koreaexim_key"]
 
-today = datetime.date.today()
+today = datetime.datetime.now()
+if datetime.datetime.now().hour < 9:
+    today = today - datetime.timedelta(
+        hours=13 + today.hour, minutes=today.minute, seconds=today.second, microseconds=today.microsecond
+    )
 today += datetime.timedelta(min(-today.weekday() + 4, 0))
+
 
 try:
     conn = mariadb.connect(
@@ -28,18 +33,20 @@ except mariadb.Error as e:
     print(f"Error connecting to MariaDB Platform: {e}")
 cur = conn.cursor()
 cur.execute("select update_time from money_exchange_from_koreaexim")
-if (datetime.datetime.now() - cur.fetchone()[0]).seconds / 3600 > 1:
+if cur.fetchone() is None or (datetime.datetime.now() - cur.fetchone()[0]).seconds / 3600 > 1:
     base_url = "https://www.koreaexim.go.kr/site/program/financial/exchangeJSON?"
     params = {"data": "AP01", "authkey": my_key, "searchdate": today.strftime("%Y%m%d")}
     response = requests.post(base_url, verify=False, data=params)
 
-    placeholder = ", ".join(["%s"] * len(response.json()[0]))
+    placeholder = ", ".join(["%s"] * (len(response.json()[0]) + 1))
     stmt = "insert into `{table}` ({columns}) values ({values});".format(
-        table="money_exchange_from_koreaexim", columns=",".join(response.json()[0].keys()), values=placeholder
+        table="money_exchange_from_koreaexim",
+        columns=",".join(response.json()[0].keys()) + ",time_fromapi",
+        values=placeholder,
     )
     cur.execute("TRUNCATE TABLE " + "money_exchange_from_koreaexim")
     for i in response.json():
-        cur.execute(stmt, tuple(i.values()))
+        cur.execute(stmt, list(i.values()) + [today])
     conn.commit()
 cur.close()
 conn.close()
