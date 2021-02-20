@@ -1,9 +1,11 @@
 import React from "react";
+import { Helmet } from "react-helmet";
 import "./App.css";
 
 function App() {
   return (
     <div className="App">
+      <Helmet htmlAttributes={{ lang: "kr" }} />
       <div className="black-nav">
         <div className="nav-left">이것저것 환율 계산기</div>
         <div className="nav-right">
