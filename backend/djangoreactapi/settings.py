@@ -53,6 +53,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_framework",
+    "getdbdata",
 ]
 
 MIDDLEWARE = [
@@ -91,8 +93,14 @@ WSGI_APPLICATION = "djangoreactapi.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        #'ENGINE': 'django.db.backends.sqlite3',
+        #'NAME': BASE_DIR / 'db.sqlite3',
+        "NAME": "egg_exchanger",
+        "ENGINE": "django.db.backends.mysql",
+        "USER": get_secret("mariadb_username"),
+        "PASSWORD": get_secret("mariadb_password"),
+        "HOST": "127.0.0.1",  # 공백으로 냅두면 default localhost
+        "PORT": get_secret("mariadb_port"),  # 공백으로 냅두면 default 3306
     }
 }
 
