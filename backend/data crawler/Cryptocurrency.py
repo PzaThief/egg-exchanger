@@ -30,28 +30,18 @@ if cur.fetchone() is None or (datetime.datetime.now() - cur.fetchone()[0]).secon
     cur.execute("TRUNCATE TABLE " + "cryptocurrency_from_bithumb")
     for i in tickers:
         for j in range(5):
-            cur.execute(
-                "insert into cryptocurrency_from_bithumb (payment_currency, order_currency, bids_asks, price, quantity, time_fromapi) VALUES (?, ?, ?, ?, ?, ?)",
-                (
-                    data["payment_currency"],
-                    i,
-                    "bids",
-                    float(data[i]["bids"][j]["price"]),
-                    float(data[i]["bids"][j]["quantity"]),
-                    datetime.datetime.fromtimestamp(int(data["timestamp"]) / 1000),
-                ),
-            )
-            cur.execute(
-                "insert into cryptocurrency_from_bithumb (payment_currency, order_currency, bids_asks, price, quantity, time_fromapi) VALUES (?, ?, ?, ?, ?, ?)",
-                (
-                    data["payment_currency"],
-                    i,
-                    "asks",
-                    float(data[i]["asks"][j]["price"]),
-                    float(data[i]["asks"][j]["quantity"]),
-                    datetime.datetime.fromtimestamp(int(data["timestamp"]) / 1000),
-                ),
-            )
+            for bids_asks in ("bids", "asks"):
+                cur.execute(
+                    "insert into cryptocurrency_from_bithumb (payment_currency, order_currency, bids_asks, price, quantity, time_fromapi) VALUES (?, ?, ?, ?, ?, ?)",
+                    (
+                        data["payment_currency"],
+                        i,
+                        bids_asks,
+                        float(data[i][bids_asks][j]["price"]),
+                        float(data[i][bids_asks][j]["quantity"]),
+                        datetime.datetime.fromtimestamp(int(data["timestamp"]) / 1000),
+                    ),
+                )
     conn.commit()
 cur.close()
 conn.close()

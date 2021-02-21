@@ -20,7 +20,6 @@ if datetime.datetime.now().hour < 9:
     )
 today += datetime.timedelta(min(-today.weekday() + 4, 0))
 
-
 try:
     conn = mariadb.connect(
         host="127.0.0.1",
