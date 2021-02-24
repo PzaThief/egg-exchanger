@@ -19,12 +19,13 @@ class CryptocurrencyFromBithumb(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'cryptocurrency_from_bithumb'
+        db_table = "cryptocurrency_from_bithumb"
+        app_label = "dataforapi"
 
 
 class FinancialProductsFromKrx(models.Model):
     product = models.CharField(max_length=50, blank=True, null=True)
-    ticker = models.CharField(max_length=50, blank=True, null=True)
+    ticker = models.CharField(primary_key=True, max_length=50)
     name = models.CharField(max_length=50, blank=True, null=True)
     count_unit = models.CharField(max_length=50, blank=True, null=True)
     time_fromapi = models.DateTimeField(blank=True, null=True)
@@ -32,42 +33,48 @@ class FinancialProductsFromKrx(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'financial_products_from_krx'
+        db_table = "financial_products_from_krx"
+        app_label = "dataforapi"
 
 
 class Miscellaneous(models.Model):
-    unit_name = models.CharField(max_length=50, blank=True, null=True)
+    unit_name = models.CharField(primary_key=True, max_length=50)
     count_unit = models.CharField(max_length=50, blank=True, null=True)
-    price = models.CharField(max_length=50, blank=True, null=True)
+    price_unit = models.CharField(max_length=50, blank=True, null=True)
+    price = models.FloatField(blank=True, null=True)
     update_time = models.DateTimeField()
 
     class Meta:
         managed = False
-        db_table = 'miscellaneous'
+        db_table = "miscellaneous"
+        app_label = "dataforapi"
 
 
 class MoneyExchangeFromKoreaexim(models.Model):
-    result = models.IntegerField(db_column='RESULT', blank=True, null=True)  # Field name made lowercase.
-    cur_unit = models.CharField(db_column='CUR_UNIT', max_length=50, blank=True, null=True)  # Field name made lowercase.
-    cur_nm = models.CharField(db_column='CUR_NM', max_length=50, blank=True, null=True)  # Field name made lowercase.
-    ttb = models.CharField(db_column='TTB', max_length=50, blank=True, null=True)  # Field name made lowercase.
-    tts = models.CharField(db_column='TTS', max_length=50, blank=True, null=True)  # Field name made lowercase.
-    deal_bas_r = models.CharField(db_column='DEAL_BAS_R', max_length=50, blank=True, null=True)  # Field name made lowercase.
-    bkpr = models.CharField(db_column='BKPR', max_length=50, blank=True, null=True)  # Field name made lowercase.
-    yy_efee_r = models.CharField(db_column='YY_EFEE_R', max_length=50, blank=True, null=True)  # Field name made lowercase.
-    ten_dd_efee_r = models.CharField(db_column='TEN_DD_EFEE_R', max_length=50, blank=True, null=True)  # Field name made lowercase.
-    kftc_deal_bas_r = models.CharField(db_column='KFTC_DEAL_BAS_R', max_length=50, blank=True, null=True)  # Field name made lowercase.
-    kftc_bkpr = models.CharField(db_column='KFTC_BKPR', max_length=50, blank=True, null=True)  # Field name made lowercase.
+    cur_unit = models.CharField(db_column="CUR_UNIT", primary_key=True, max_length=50)  # Field name made lowercase.
+    cur_nm = models.CharField(db_column="CUR_NM", max_length=50, blank=True, null=True)  # Field name made lowercase.
+    ttb = models.FloatField(db_column="TTB", blank=True, null=True)  # Field name made lowercase.
+    tts = models.FloatField(db_column="TTS", blank=True, null=True)  # Field name made lowercase.
+    deal_bas_r = models.FloatField(db_column="DEAL_BAS_R", blank=True, null=True)  # Field name made lowercase.
+    bkpr = models.FloatField(db_column="BKPR", blank=True, null=True)  # Field name made lowercase.
+    yy_efee_r = models.FloatField(db_column="YY_EFEE_R", blank=True, null=True)  # Field name made lowercase.
+    ten_dd_efee_r = models.FloatField(db_column="TEN_DD_EFEE_R", blank=True, null=True)  # Field name made lowercase.
+    kftc_deal_bas_r = models.FloatField(
+        db_column="KFTC_DEAL_BAS_R", blank=True, null=True
+    )  # Field name made lowercase.
+    kftc_bkpr = models.FloatField(db_column="KFTC_BKPR", blank=True, null=True)  # Field name made lowercase.
     update_time = models.DateTimeField()
     time_fromapi = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         managed = False
-        db_table = 'money_exchange_from_koreaexim'
+        db_table = "money_exchange_from_koreaexim"
+        app_label = "dataforapi"
 
 
 class NormalizationUnit(models.Model):
-    unit_name = models.CharField(max_length=50, blank=True, null=True)
+    unit_category = models.CharField(max_length=50, blank=True, null=True)
+    unit_name = models.CharField(primary_key=True, max_length=50)
     count_unit = models.CharField(max_length=50, blank=True, null=True)
     price_unit = models.CharField(max_length=50, blank=True, null=True)
     price = models.FloatField(blank=True, null=True)
@@ -76,4 +83,5 @@ class NormalizationUnit(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'normalization_unit'
+        db_table = "normalization_unit"
+        app_label = "dataforapi"
