@@ -17,9 +17,9 @@ def getbusinessday(today=datetime.datetime.now()):
 
 
 def isbusinessday(day):
-    ans = True
+    ans = False
     if day.weekday() > 4:
-        ans = False
+        ans = True
     else:
         base_url = "http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo"
         params = {"serviceKey": mysecretskey()["DATAgokr_key"], "solYear": day.year, "_type": "json", "numOfRows": 20}
@@ -28,7 +28,7 @@ def isbusinessday(day):
         for item in res.json()["response"]["body"]["items"]["item"]:
             restday.append(str(item["locdate"]))
         if day.strftime("%Y%m%d") in restday:
-            ans = False
+            ans = True
     return ans
 
 

@@ -54,7 +54,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
-    "getdbdata",
+    "djangoreactapi.api",
 ]
 
 MIDDLEWARE = [
@@ -95,13 +95,21 @@ DATABASES = {
     "default": {
         #'ENGINE': 'django.db.backends.sqlite3',
         #'NAME': BASE_DIR / 'db.sqlite3',
+        "NAME": "egg_exchanger_django",
+        "ENGINE": "django.db.backends.mysql",
+        "USER": get_secret("mariadb_username"),
+        "PASSWORD": get_secret("mariadb_password"),
+        "HOST": "127.0.0.1",  # 공백으로 냅두면 default localhost
+        "PORT": get_secret("mariadb_port"),  # 공백으로 냅두면 default 3306
+    },
+    "dataforapi": {
         "NAME": "egg_exchanger",
         "ENGINE": "django.db.backends.mysql",
         "USER": get_secret("mariadb_username"),
         "PASSWORD": get_secret("mariadb_password"),
         "HOST": "127.0.0.1",  # 공백으로 냅두면 default localhost
         "PORT": get_secret("mariadb_port"),  # 공백으로 냅두면 default 3306
-    }
+    },
 }
 
 
@@ -123,18 +131,22 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"],
+    "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
+}
+
+DATABASE_ROUTERS = ["djangoreactapi.router.Router"]
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
-
-TIME_ZONE = "UTC"
-
+LANGUAGE_CODE = "ko-kr"
+TIME_ZONE = "Asia/Seoul"
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 

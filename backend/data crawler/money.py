@@ -16,7 +16,7 @@ if today.hour < 11:
     today = today - datetime.timedelta(
         hours=13 + today.hour, minutes=today.minute, seconds=today.second, microseconds=today.microsecond
     )
-today = getbusinessday(today)
+today = myutil.getbusinessday(today)
 
 with closing(myutil.mydbconnect()) as conn:
     with conn.cursor() as cur:

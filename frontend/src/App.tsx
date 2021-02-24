@@ -1,6 +1,7 @@
 import React from "react";
 import { Helmet } from "react-helmet";
 import "./App.css";
+import Dropdown from "./dropdown";
 
 function App() {
   return (
@@ -12,7 +13,9 @@ function App() {
           <a {...to_sitecode}>코드 보러가기</a>
         </div>
       </div>
-      <div className="exchanger-cover"></div>
+      <div className="exchanger-cover">
+        <div style={{ width: 200 }}> start</div>
+      </div>
       <div className="cat-is-watching-you"></div>
     </div>
   );
