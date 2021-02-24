@@ -8,6 +8,13 @@ import datetime
 import xmltodict
 
 
+def if_float_conv(num):
+    try:
+        return float(num.replace(",", ""))
+    except (ValueError, TypeError):
+        return num
+
+
 def getbusinessday(today=datetime.datetime.now()):
     if not isinstance(today, datetime.date):
         today = datetime.datetime.strptime(today, "%Y%m%d")
