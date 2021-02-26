@@ -1,6 +1,18 @@
 .App {
   text-align: center;
 }
+html.light {
+  background: #ffffff;
+  color: #343434;
+  --cat-url: url("./cat-removebg.png");
+}
+
+html.dark {
+  background: #121212;
+  color: #bbb;
+  --cat-url: url("./cat-removebg-darkmode.png");
+}
+
 body {
   font-family: "nanumsquare";
 }
@@ -80,11 +92,10 @@ body {
     position: absolute;
   }
 }
-
 .cat-is-watching-you {
   width: calc(100% - 574px);
   padding-bottom: 40%;
-  background-image: url("./cat-removebg.png");
+  background-image: var(--cat-url);
   background-size: contain;
   background-repeat: no-repeat;
   background-position: right top;

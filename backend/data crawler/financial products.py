@@ -6,6 +6,7 @@ from pathlib import Path
 import requests
 import mariadb
 import myutil
+import xmltodict
 from contextlib import closing
 
 today = datetime.datetime.now()
@@ -13,14 +14,14 @@ if datetime.datetime.now().hour < 9:
     today = today - datetime.timedelta(
         hours=15 + today.hour, minutes=today.minute, seconds=today.second, microseconds=today.microsecond
     )
-today = getbusinessday(today)
+today = myutil.getbusinessday(today)
 
 with closing(myutil.mydbconnect()) as conn:
     with conn.cursor() as cur:
         cur.execute("select update_time from cryptocurrency_from_bithumb")
 
-
-base_bidurl = "dbms/MDC/STAT/standard/"
+url = "http://data.krx.co.kr/comm/bldAttendant/getJsonData.cmd"
+base_bidpath = "dbms/MDC/STAT/standard/"
 bids = {
     "stock": "MDCSTAT01501",
     "etf": "MDCSTAT04301",
@@ -30,6 +31,14 @@ bids = {
     "derivative": "MDCSTAT12501",
 }
 
-params = {"bld": "dbms/MDC/STAT/standard/MDCSTAT01501", "mktId": "ALL", "trdDd": "20200831"}
-url = "http://data.krx.co.kr/comm/bldAttendant/getJsonData.cmd"
-stock_data = requests.post(url, data=params).json()
+for bid_key, bid_value in bids.items():
+    params = {"bld": base_bidpath + bid_value, "trdDd": today.strftime("%Y%m%d")}
+    if bid_key == "stock":
+        params["mktId"] = "ALL"
+        output = "OutBlock_1"
+    else:
+        output = "output"
+    data = requests.post(url, data=params).json()
+    datefromapi = datetime.datetime.strptime(data["CURRENT_DATETIME"], "%Y.%m.%d %p %I:%M:%S")
+    data = data[output]
+    data_keys = list(set(data[0].keys()).intersection(set(["ISU_SRT_CD", "ISU_ABBRV", "TDD_CLSPRC", "NAV"])))
