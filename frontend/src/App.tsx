@@ -8,12 +8,15 @@ function App() {
     <div className="App">
       <Helmet htmlAttributes={{ lang: "kr" }}></Helmet>
       <div className="black-nav">
-        <div className="nav-left">이것저것 환율 계산기</div>
+        <div className="nav-left">
+          <span style={{ paddingRight: "15px" }}>이것저것 환율 계산기</span>
+          <span>{DarkMode()}</span>
+        </div>
         <div className="nav-right">
           <a {...to_sitecode}>코드 보러가기</a>
         </div>
       </div>
-      <div className="exchanger-cover">{DarkMode()}</div>
+      <div className="exchanger-cover"></div>
       <div className="cat-is-watching-you"></div>
     </div>
   );
@@ -54,6 +57,7 @@ const DarkMode = () => {
       localStorage.setItem("theme", "dark");
       theme = darkTheme;
     }
+    e.target.innerHTML = theme + " mode";
   };
 
   return (
@@ -62,7 +66,7 @@ const DarkMode = () => {
       id="darkMode"
       onClick={(e) => switchTheme(e)}
     >
-      테마변경
+      {theme + " mode"}
     </button>
   );
 };

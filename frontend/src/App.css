@@ -2,15 +2,19 @@
   text-align: center;
 }
 html.light {
-  background: #ffffff;
+  background: #fcfcfc;
   color: #343434;
   --cat-url: url("./cat-removebg.png");
+  --background-color: #343434;
+  --color: #fcfcfc;
 }
 
 html.dark {
-  background: #121212;
-  color: #bbb;
+  background: #343434;
+  color: #fcfcfc;
   --cat-url: url("./cat-removebg-darkmode.png");
+  --background-color: #fcfcfc;
+  --color: #343434;
 }
 
 body {
@@ -23,23 +27,45 @@ body {
   display: flex;
   color: white;
 }
-@media (min-width: 400px) {
+button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding: 0.2rem;
+  background-color: var(--background-color);
+  color: var(--color);
+  font-size: 13px;
+  font-weight: 400;
+  text-align: center;
+  text-decoration: none;
+  display: inline;
+  width: auto;
+  border-color: dimgrey;
+  border-width: solid;
+  font-family: "nanumsquare";
+}
+button:hover {
+  background-color: var(--color);
+  color: var(--background-color);
+}
+@media (min-width: 515px) {
   .nav-left {
     padding: 20px;
     font-weight: 600;
     font-size: 20px;
     text-align: left;
-    width: 50%;
-    min-width: 240px;
+    width: 70%;
+    min-width: 310px;
     float: left;
     box-sizing: border-box;
+    vertical-align: middle;
   }
 
   .nav-right {
     padding: 20px;
     font-weight: 600;
     font-size: 20px;
-    width: 50%;
+    width: 30%;
     min-width: 160px;
     text-align: right;
     float: right;
@@ -47,14 +73,17 @@ body {
   }
 }
 
-@media (max-width: 400px) {
+@media (max-width: 515px) {
+  button {
+    float: right;
+  }
   .nav-left {
     padding: 20px;
     font-weight: 600;
     font-size: 20px;
     text-align: center;
     width: 100%;
-    min-width: 220px;
+    min-width: 320px;
     box-sizing: border-box;
   }
   .nav-right {
