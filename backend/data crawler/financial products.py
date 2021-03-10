@@ -15,10 +15,11 @@ if datetime.datetime.now().hour < 9:
         hours=15 + today.hour, minutes=today.minute, seconds=today.second, microseconds=today.microsecond
     )
 today = myutil.getbusinessday(today)
+dbname="cryptocurrency_from_bithumb"
 
 with closing(myutil.mydbconnect()) as conn:
     with conn.cursor() as cur:
-        cur.execute("select update_time from cryptocurrency_from_bithumb")
+        cur.execute("select update_time from "+dbname)
 
 url = "http://data.krx.co.kr/comm/bldAttendant/getJsonData.cmd"
 base_bidpath = "dbms/MDC/STAT/standard/"

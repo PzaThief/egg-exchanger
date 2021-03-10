@@ -12,7 +12,8 @@ secrets = myutil.mysecretskey()
 with closing(myutil.mydbconnect()) as conn:
     with conn.cursor() as cur:
         cur.execute("select update_time from cryptocurrency_from_bithumb")
-        if cur.fetchone() is None or (datetime.datetime.now() - cur.fetchone()[0]).seconds / 60 > 1:
+        before_update_time=cur.fetchone()
+        if before_update_time is None or (datetime.datetime.now() - before_update_time[0]).seconds / 60 > 1:
             response = requests.get("https://api.bithumb.com/public/orderbook/ALL_KRW", verify=False)
             data = response.json()["data"]
             tickers = [k for k, v in data.items() if isinstance(v, dict)]

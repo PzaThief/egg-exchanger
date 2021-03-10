@@ -10,6 +10,7 @@ from contextlib import closing
 
 secrets = myutil.mysecretskey()
 my_key = secrets["koreaexim_key"]
+dbname="money_exchange_from_koreaexim"
 
 today = datetime.datetime.now()
 if today.hour < 11:
@@ -20,8 +21,9 @@ today = myutil.getbusinessday(today)
 
 with closing(myutil.mydbconnect()) as conn:
     with conn.cursor() as cur:
-        cur.execute("select update_time from money_exchange_from_koreaexim")
-        if cur.fetchone() is None or (datetime.datetime.now() - cur.fetchone()[0]).seconds / 3600 > 1:
+        cur.execute("select update_time from "+dbname)
+        before_update_time=cur.fetchone()
+        if before_update_time is None or (datetime.datetime.now() - before_update_time[0]).seconds / 3600 > 1:
             base_url = "https://www.koreaexim.go.kr/site/program/financial/exchangeJSON?"
             params = {"data": "AP01", "authkey": my_key, "searchdate": today.strftime("%Y%m%d")}
             response = requests.post(base_url, verify=False, data=params)
@@ -34,11 +36,11 @@ with closing(myutil.mydbconnect()) as conn:
             if money_data:
                 placeholder = ", ".join(["%s"] * (len(money_data[0]) + 1))
                 stmt = "insert into `{table}` ({columns}) values ({values});".format(
-                    table="money_exchange_from_koreaexim",
+                    table=dbname,
                     columns=",".join(money_data[0].keys()) + ",time_fromapi",
                     values=placeholder,
                 )
-                cur.execute("TRUNCATE TABLE " + "money_exchange_from_koreaexim")
+                cur.execute("TRUNCATE TABLE " + dbname)
                 for i in money_data:
                     cur.execute(stmt, [myutil.if_float_conv(v) for v in i.values()] + [today])
                 conn.commit()

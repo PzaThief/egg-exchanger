@@ -29,7 +29,6 @@ const to_sitecode = {
 };
 
 const DarkMode = () => {
-  let clickedClass = "clicked";
   const body = document.documentElement;
   const lightTheme = "light";
   const darkTheme = "dark";
@@ -48,12 +47,10 @@ const DarkMode = () => {
   const switchTheme = (e: any) => {
     if (theme === darkTheme) {
       body.classList.replace(darkTheme, lightTheme);
-      e.target.classList.remove(clickedClass);
       localStorage.setItem("theme", "light");
       theme = lightTheme;
     } else {
       body.classList.replace(lightTheme, darkTheme);
-      e.target.classList.add(clickedClass);
       localStorage.setItem("theme", "dark");
       theme = darkTheme;
     }
@@ -61,11 +58,7 @@ const DarkMode = () => {
   };
 
   return (
-    <button
-      className={theme === "dark" ? clickedClass : ""}
-      id="darkMode"
-      onClick={(e) => switchTheme(e)}
-    >
+    <button id="darkMode" onClick={(e) => switchTheme(e)}>
       {theme + " mode"}
     </button>
   );
